@@ -28,9 +28,11 @@ public class Main{
         // Crear la ventana principal
         JFrame frame = new JFrame("Botón Transparente");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(450, 450);
+        frame.setSize(400, 400);
         
         Panel pa = new Panel();
+        pa.addImageDirectory("C:\\Users\\Alumne\\Documents\\Trasteo");
+        pa.addImage("C:\\Users\\Alumne\\Pictures\\Screenshots\\Captura de pantalla 2024-11-21 115855.png");
         pa.setVisible(true);
         frame.add(pa);
         
