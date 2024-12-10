@@ -28,7 +28,6 @@ import javax.swing.border.LineBorder;
  */
 public class Panel extends JPanel {
 
-    int index = 0;
     private Color transp = new Color(0, 0, 0, 0);
     private Color opaco = new Color(255, 255, 255, 255);
     private ArrayList<String> imgPaths = new ArrayList<>();
