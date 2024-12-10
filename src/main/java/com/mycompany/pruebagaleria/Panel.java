@@ -79,6 +79,8 @@ public class Panel extends JPanel{
                     index--;
                     String name = imgPaths.get(index);
                     showImage(name);
+                }else{
+                    index = imgPaths.size()-1;
                 }
             }
 
@@ -127,6 +129,8 @@ public class Panel extends JPanel{
                     index++;
                     String name = imgPaths.get(index);
                     showImage(name);
+                }else{
+                    index=0;
                 }
             }
         });                                                  
