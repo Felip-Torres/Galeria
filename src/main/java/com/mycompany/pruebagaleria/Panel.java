@@ -104,11 +104,7 @@ public class Panel extends JPanel{
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (index < imgPaths.size()-1) {
-                    index++;
-                    String name = imgPaths.get(index);
-                    showImage(name);
-                }
+                
             }
 
             @Override
@@ -118,7 +114,11 @@ public class Panel extends JPanel{
 
             @Override
             public void mouseReleased(MouseEvent e) {
- 
+                if (index < imgPaths.size()-1) {
+                    index++;
+                    String name = imgPaths.get(index);
+                    showImage(name);
+                }
             }
         });
         
