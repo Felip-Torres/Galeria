@@ -12,8 +12,9 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -38,30 +39,18 @@ public class Panel extends JPanel{
         setBackground(Color.BLACK);
         
         imgPaths = new ArrayList<>();
-        String dirCarpeta = "";
-        File carpeta = new File(dirCarpeta);
-
-        if (carpeta.exists() && carpeta.isDirectory()) {
-            File[] files = carpeta.listFiles();
-            if (files != null) {
-                for (File f : files) {
-                    if(f.isFile() && imagenValida(f.getName())) imgPaths.add(f.getAbsolutePath());else System.out.println("algo");
-                }
-            }else{
-                System.out.println("No tiene archivos");
-                System.exit(1);
-            }
-            String nombre = imgPaths.get(index);
-            showImage(nombre);
-        }else{
-            System.out.println("La carpeta no existe");
-        }
+        conexionAzure();
         
         imagenLabel = new JLabel();
         imagenLabel.setBounds(0, 0, getWidth(), getHeight());
         imagenLabel.setVisible(true);
         imagenLabel.setFocusable(false);
         add(imagenLabel);
+        
+        // Mostrar la primera imagen
+        String nombre = imgPaths.get(index);
+        showImage(nombre);
+        
         // Crear el botón
         JButton botonIzquierda = new JButton("<");
         JButton botonDerecha = new JButton(">");
@@ -164,37 +153,59 @@ public class Panel extends JPanel{
         return null;
     }
     
-    public void showImage(String img) {
-        Image imagen = new ImageIcon(img).getImage();
-        
-        int panelwidth = imagen.getWidth(this);
-        int panelheight = imagen.getHeight(this);
-        double aspectRatio = (double) imagen.getWidth(this) / imagen.getHeight(this);
+    public void showImage(String url) {
+        try {
+            // Leer la imagen directamente desde la URL
+            Image imagen = ImageIO.read(new URL(url));
 
-        if (imagen.getHeight(this) > imagenLabel.getHeight()) {
-            panelheight = imagenLabel.getHeight();
-            panelwidth = (int) (panelheight * aspectRatio);
-        }
-        if (imagen.getWidth(this) > imagenLabel.getWidth()) {
-            panelwidth = imagenLabel.getWidth();
-            panelheight = (int) (panelwidth / aspectRatio);
-        }
-        if(panelwidth < imagenLabel.getWidth() && panelheight < imagenLabel.getHeight()){
-            if(aspectRatio>=1){
-                panelwidth = imagenLabel.getWidth();
-                panelheight = (int)(panelwidth / aspectRatio);
-            }else{
+            int panelwidth = imagen.getWidth(null);
+            int panelheight = imagen.getHeight(null);
+            double aspectRatio = (double) imagen.getWidth(null) / imagen.getHeight(null);
+
+            if (imagen.getHeight(null) > imagenLabel.getHeight()) {
                 panelheight = imagenLabel.getHeight();
                 panelwidth = (int) (panelheight * aspectRatio);
             }
+            if (imagen.getWidth(null) > imagenLabel.getWidth()) {
+                panelwidth = imagenLabel.getWidth();
+                panelheight = (int) (panelwidth / aspectRatio);
+            }
+            if (panelwidth < imagenLabel.getWidth() && panelheight < imagenLabel.getHeight()) {
+                if (aspectRatio >= 1) {
+                    panelwidth = imagenLabel.getWidth();
+                    panelheight = (int) (panelwidth / aspectRatio);
+                } else {
+                    panelheight = imagenLabel.getHeight();
+                    panelwidth = (int) (panelheight * aspectRatio);
+                }
+            }
+
+            ImageIcon imgIcon = new ImageIcon(imagen.getScaledInstance(panelwidth, panelheight, Image.SCALE_SMOOTH));
+            imagenLabel.setIcon(imgIcon);
+
+            imagenLabel.setHorizontalAlignment(SwingConstants.CENTER); // Centrar horizontalmente
+            imagenLabel.setVerticalAlignment(SwingConstants.CENTER);
+        } catch (Exception e) {
+            System.err.println("Error al cargar imagen desde URL: " + url);
+            e.printStackTrace();
         }
-        
-        ImageIcon imgIcon = new ImageIcon(imagen.getScaledInstance(panelwidth, panelheight, Image.SCALE_SMOOTH));
-        imagenLabel.setIcon(imgIcon);
-        
-        
-        imagenLabel.setHorizontalAlignment(SwingConstants.CENTER); // Centrar horizontalmente
-        imagenLabel.setVerticalAlignment(SwingConstants.CENTER); 
+    }
+    
+    public void conexionAzure(){
+        // Configurar Azure Blob Service
+        String azureConnectionString = "DefaultEndpointsProtocol=https;AccountName=felip;AccountKey=7kWGzzXhJ/KvyMF+J9P83bfc9Uyy3CY9twJ15tmuU3H/fccHALUvrP0fdvhgG79qp7Me7vX8EEke+AStP3kgeQ==;EndpointSuffix=core.windows.net"; // Reemplaza con tu cadena de conexión
+        String contenedor = "fotos"; // Reemplaza con el nombre de tu contenedor
+        String carpetaDestino = "/imagenes"; // Carpeta local para descargar imágenes
+
+        AzureBlobService azureBlobService = new AzureBlobService(azureConnectionString, contenedor);
+
+        // Descargar imágenes desde Azure
+        imgPaths = azureBlobService.obtenerUrlsImagenes("fondos");
+
+        if (imgPaths.isEmpty()) {
+            System.out.println("No hay imágenes disponibles.");
+            System.exit(1);
+        }
     }
 }
 
