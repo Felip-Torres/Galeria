@@ -1,22 +1,21 @@
+
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 package com.mycompany.pruebagaleria;
 
 import static com.mycompany.pruebagaleria.Main.Transparente;
-import static com.mycompany.pruebagaleria.PruebaGaleria.imagenValida;
 import java.awt.Color;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -26,6 +25,7 @@ import javax.swing.border.LineBorder;
  *
  * @author Alumne
  */
+
 public class Panel extends JPanel{
     ArrayList<String> imgPaths;
     int index = 0;
@@ -36,6 +36,26 @@ public class Panel extends JPanel{
         setLayout(null);
         setBorder(new LineBorder(Color.BLACK));
         setBackground(Color.BLACK);
+        
+        imgPaths = new ArrayList<>();
+        String dirCarpeta = "";
+        File carpeta = new File(dirCarpeta);
+
+        if (carpeta.exists() && carpeta.isDirectory()) {
+            File[] files = carpeta.listFiles();
+            if (files != null) {
+                for (File f : files) {
+                    if(f.isFile() && imagenValida(f.getName())) imgPaths.add(f.getAbsolutePath());else System.out.println("algo");
+                }
+            }else{
+                System.out.println("No tiene archivos");
+                System.exit(1);
+            }
+            String nombre = imgPaths.get(index);
+            showImage(nombre);
+        }else{
+            System.out.println("La carpeta no existe");
+        }
         
         imagenLabel = new JLabel();
         imagenLabel.setBounds(0, 0, getWidth(), getHeight());
@@ -120,46 +140,14 @@ public class Panel extends JPanel{
                     showImage(name);
                 }
             }
-        });
-        
-        JButton boton = new JButton("Cargar imagenes");
-        boton.setBounds(200, 200, 100, 50);
-        boton.setVisible(true);
-        boton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {                                              
-            imgPaths = new ArrayList<>();
-            String dirCarpeta = "";
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            int seleccionado = fileChooser.showOpenDialog(imagenLabel);
-            if(seleccionado != JFileChooser.CANCEL_OPTION) {
-                File directorio = fileChooser.getSelectedFile();
-                dirCarpeta = fileChooser.getSelectedFile().getPath();
-                File carpeta = new File(dirCarpeta);
+        });                                                  
 
-                if (carpeta.exists() && carpeta.isDirectory()) {
-                    File[] files = carpeta.listFiles();
-                    if (files != null) {
-                        for (File f : files) {
-                            if(f.isFile() && imagenValida(f.getName())) imgPaths.add(f.getAbsolutePath());
-                        }
-                    }
-                }
-                String nombre = imgPaths.get(index);
-                    showImage(nombre);
-                }
-           }                     
-        });
-        
-        add(boton);
         add(botonIzquierda);
         add(botonDerecha);
         
         setComponentZOrder(imagenLabel, 1);
         setComponentZOrder(botonIzquierda, 0);
         setComponentZOrder(botonDerecha, 0);
-        setComponentZOrder(boton, 2);
     }    
     
     // VALIDACION FORMATO IMAGENES
@@ -209,3 +197,6 @@ public class Panel extends JPanel{
         imagenLabel.setVerticalAlignment(SwingConstants.CENTER); 
     }
 }
+
+
+
