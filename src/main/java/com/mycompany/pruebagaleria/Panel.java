@@ -12,6 +12,7 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
@@ -182,16 +183,6 @@ public class Panel extends JPanel {
         imgPaths.remove(indice);
     }
 
-    // VALIDACION FORMATO IMAGENES
-    private static boolean imagenValida(String archivo) {
-        String extension = compruebaExtension(archivo);
-        if (extension != null && extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpeg")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     private static String compruebaExtension(String archivo) {
         int dotIndex = archivo.lastIndexOf(".");
         if (dotIndex > 0 && dotIndex < archivo.length() - 1) {
@@ -200,7 +191,7 @@ public class Panel extends JPanel {
         return null;
     }
 
-    private void showImage(String img) {
+    private void showImageLocal(String img) {
         Image imagen = new ImageIcon(img).getImage();
 
         int panelwidth = imagen.getWidth(this);
@@ -220,21 +211,32 @@ public class Panel extends JPanel {
                 panelwidth = imagenLabel.getWidth();
                 panelheight = (int) (panelwidth / aspectRatio);
             } else {
+                    panelheight = imagenLabel.getHeight();
+                    panelwidth = (int) (panelheight * aspectRatio);
+                }
+            }
+
+            ImageIcon imgIcon = new ImageIcon(imagen.getScaledInstance(panelwidth, panelheight, Image.SCALE_SMOOTH));
+            imagenLabel.setIcon(imgIcon);
+
+            imagenLabel.setHorizontalAlignment(SwingConstants.CENTER); // Centrar horizontalmente
+            imagenLabel.setVerticalAlignment(SwingConstants.CENTER);
+    }
     
     public void showImage(String url) {
         try {
             // Leer la imagen directamente desde la URL
             Image imagen = ImageIO.read(new URL(url));
 
-            int panelwidth = imagen.getWidth(null);
-            int panelheight = imagen.getHeight(null);
-            double aspectRatio = (double) imagen.getWidth(null) / imagen.getHeight(null);
+            int panelwidth = imagen.getWidth(this);
+            int panelheight = imagen.getHeight(this);
+            double aspectRatio = (double) imagen.getWidth(this) / imagen.getHeight(this);
 
-            if (imagen.getHeight(null) > imagenLabel.getHeight()) {
+            if (imagen.getHeight(this) > imagenLabel.getHeight()) {
                 panelheight = imagenLabel.getHeight();
                 panelwidth = (int) (panelheight * aspectRatio);
             }
-            if (imagen.getWidth(null) > imagenLabel.getWidth()) {
+            if (imagen.getWidth(this) > imagenLabel.getWidth()) {
                 panelwidth = imagenLabel.getWidth();
                 panelheight = (int) (panelwidth / aspectRatio);
             }
@@ -274,12 +276,6 @@ public class Panel extends JPanel {
             System.out.println("No hay imágenes disponibles.");
             System.exit(1);
         }
-
-        ImageIcon imgIcon = new ImageIcon(imagen.getScaledInstance(panelwidth, panelheight, Image.SCALE_SMOOTH));
-        imagenLabel.setIcon(imgIcon);
-
-        imagenLabel.setHorizontalAlignment(SwingConstants.CENTER); // Centrar horizontalmente
-        imagenLabel.setVerticalAlignment(SwingConstants.CENTER);
     }
 }
 
