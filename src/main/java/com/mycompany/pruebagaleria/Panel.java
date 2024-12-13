@@ -42,7 +42,7 @@ public class Panel extends JPanel {
         setBackground(Color.BLACK);
         
         imgPaths = new ArrayList<>();
-        conexionAzure();
+        //conexionAzure();
         
         imagenLabel = new JLabel();
         imagenLabel.setBounds(0, 0, getWidth(), getHeight());
@@ -50,9 +50,6 @@ public class Panel extends JPanel {
         imagenLabel.setFocusable(false);
         add(imagenLabel);
         
-        // Mostrar la primera imagen
-        String nombre = imgPaths.get(index);
-        showImage(nombre);
         
         // Crear el botón
         DegradadoButton botonDerecha = new DegradadoButton(">", transp, opaco);
@@ -96,6 +93,8 @@ public class Panel extends JPanel {
                     showImage(name);
                 }else{
                     index = imgPaths.size()-1;
+                    String name = imgPaths.get(index);
+                    showImage(name);
                 }
             }
         });
@@ -130,6 +129,10 @@ public class Panel extends JPanel {
             public void mouseReleased(MouseEvent e) {
                 if (index < imgPaths.size()-1) {
                     index++;
+                    String name = imgPaths.get(index);
+                    showImage(name);
+                }else{
+                    index = 0;
                     String name = imgPaths.get(index);
                     showImage(name);
                 }
@@ -173,6 +176,7 @@ public class Panel extends JPanel {
         File img = new File(imgPath);
         if (img.exists() && !img.isDirectory()) {
             imgPaths.add(img.getAbsolutePath());
+            System.out.println(img.getAbsolutePath());
         }
         if (!imgPaths.isEmpty()) {
             showImage(imgPaths.get(index));
@@ -190,43 +194,17 @@ public class Panel extends JPanel {
         }
         return null;
     }
-
-    private void showImageLocal(String img) {
-        Image imagen = new ImageIcon(img).getImage();
-
-        int panelwidth = imagen.getWidth(this);
-        int panelheight = imagen.getHeight(this);
-        double aspectRatio = (double) imagen.getWidth(this) / imagen.getHeight(this);
-
-        if (imagen.getHeight(this) > imagenLabel.getHeight()) {
-            panelheight = imagenLabel.getHeight();
-            panelwidth = (int) (panelheight * aspectRatio);
-        }
-        if (imagen.getWidth(this) > imagenLabel.getWidth()) {
-            panelwidth = imagenLabel.getWidth();
-            panelheight = (int) (panelwidth / aspectRatio);
-        }
-        if (panelwidth < imagenLabel.getWidth() && panelheight < imagenLabel.getHeight()) {
-            if (aspectRatio >= 1) {
-                panelwidth = imagenLabel.getWidth();
-                panelheight = (int) (panelwidth / aspectRatio);
-            } else {
-                    panelheight = imagenLabel.getHeight();
-                    panelwidth = (int) (panelheight * aspectRatio);
-                }
-            }
-
-            ImageIcon imgIcon = new ImageIcon(imagen.getScaledInstance(panelwidth, panelheight, Image.SCALE_SMOOTH));
-            imagenLabel.setIcon(imgIcon);
-
-            imagenLabel.setHorizontalAlignment(SwingConstants.CENTER); // Centrar horizontalmente
-            imagenLabel.setVerticalAlignment(SwingConstants.CENTER);
-    }
     
     public void showImage(String url) {
         try {
             // Leer la imagen directamente desde la URL
-            Image imagen = ImageIO.read(new URL(url));
+            Image imagen;
+            System.out.println(url);
+            if (url.startsWith("http")) {
+                imagen = ImageIO.read(new URL(url));
+            }else{
+                imagen = new ImageIcon(url).getImage();
+            }
 
             int panelwidth = imagen.getWidth(this);
             int panelheight = imagen.getHeight(this);
@@ -261,16 +239,12 @@ public class Panel extends JPanel {
         }
     }
     
-    public void conexionAzure(){
-        // Configurar Azure Blob Service
-        String azureConnectionString = "DefaultEndpointsProtocol=https;AccountName=felip;AccountKey=7kWGzzXhJ/KvyMF+J9P83bfc9Uyy3CY9twJ15tmuU3H/fccHALUvrP0fdvhgG79qp7Me7vX8EEke+AStP3kgeQ==;EndpointSuffix=core.windows.net"; // Reemplaza con tu cadena de conexión
-        String contenedor = "fotos"; // Reemplaza con el nombre de tu contenedor
-        String carpetaDestino = "/imagenes"; // Carpeta local para descargar imágenes
-
-        AzureBlobService azureBlobService = new AzureBlobService(azureConnectionString, contenedor);
+    public void conexionAzure(String conexion, String contenedor, String carpetaDestino){
+        AzureBlobService azureBlobService = new AzureBlobService(conexion, contenedor);
 
         // Descargar imágenes desde Azure
-        imgPaths = azureBlobService.obtenerUrlsImagenes("fondos");
+        for(String url: azureBlobService.obtenerUrlsImagenes(carpetaDestino))
+        imgPaths.add(url);
 
         if (imgPaths.isEmpty()) {
             System.out.println("No hay imágenes disponibles.");

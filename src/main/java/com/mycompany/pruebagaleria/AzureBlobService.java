@@ -10,6 +10,7 @@ package com.mycompany.pruebagaleria;
  */
 import com.azure.storage.blob.*;
 import com.azure.storage.blob.models.*;
+import java.awt.List;
 import java.util.ArrayList;
 
 public class AzureBlobService {

@@ -31,8 +31,13 @@ public class Main{
         frame.setSize(450, 450);
         
         Panel pa = new Panel();
-        pa.addImageDirectory("C:\\Users\\Alumne\\Documents\\Trasteo");
-        pa.addImage("C:\\Users\\Alumne\\Pictures\\Screenshots\\Captura de pantalla 2024-11-21 115855.png");
+        pa.addImageDirectory("C:\\Users\\Alumne\\Pictures\\Screenshots");
+        pa.conexionAzure(
+                "DefaultEndpointsProtocol=https;AccountName=felip;AccountKey=7kWGzzXhJ/KvyMF+J9P83bfc9Uyy3CY9twJ15tmuU3H/fccHALUvrP0fdvhgG79qp7Me7vX8EEke+AStP3kgeQ==;EndpointSuffix=core.windows.net", 
+                "fotos", 
+                "fondos"
+        );
+        
 
         pa.setVisible(true);
         frame.add(pa);
