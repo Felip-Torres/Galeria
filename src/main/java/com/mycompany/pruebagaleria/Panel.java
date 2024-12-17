@@ -1,10 +1,7 @@
-
-
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 package com.mycompany.pruebagaleria;
 
 import static com.mycompany.pruebagaleria.Main.Transparente;
@@ -41,17 +38,16 @@ public class Panel extends JPanel {
         setLayout(null);
         setBorder(new LineBorder(Color.BLACK));
         setBackground(Color.BLACK);
-        
+
         imgPaths = new ArrayList<>();
         //conexionAzure();
-        
+
         imagenLabel = new JLabel();
         imagenLabel.setBounds(0, 0, getWidth(), getHeight());
         imagenLabel.setVisible(true);
         imagenLabel.setFocusable(false);
         add(imagenLabel);
-        
-        
+
         // Crear el botón
         DegradadoButton botonDerecha = new DegradadoButton(">", transp, opaco);
         DegradadoButton botonIzquierda = new DegradadoButton("<", opaco, transp);
@@ -92,8 +88,8 @@ public class Panel extends JPanel {
                     index--;
                     String name = imgPaths.get(index);
                     showImage(name);
-                }else{
-                    index = imgPaths.size()-1;
+                } else {
+                    index = imgPaths.size() - 1;
                     String name = imgPaths.get(index);
                     showImage(name);
                 }
@@ -123,16 +119,16 @@ public class Panel extends JPanel {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                
+
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (index < imgPaths.size()-1) {
+                if (index < imgPaths.size() - 1) {
                     index++;
                     String name = imgPaths.get(index);
                     showImage(name);
-                }else{
+                } else {
                     index = 0;
                     String name = imgPaths.get(index);
                     showImage(name);
@@ -146,13 +142,16 @@ public class Panel extends JPanel {
         setComponentZOrder(imagenLabel, 1);
         setComponentZOrder(botonIzquierda, 0);
         setComponentZOrder(botonDerecha, 0);
-    }    
-    
+    }
+
     // VALIDACION FORMATO IMAGENES
     public static boolean imagenValida(String archivo) {
         String extension = compruebaExtension(archivo);
-        if (extension != null && extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpeg")) return true;
-        else return false;
+        if (extension != null && extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpeg")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void addImageDirectory(String dirPath) {
@@ -195,7 +194,7 @@ public class Panel extends JPanel {
         }
         return null;
     }
-    
+
     public void showImage(String url) {
         try {
             // Leer la imagen directamente desde la URL
@@ -203,7 +202,7 @@ public class Panel extends JPanel {
             System.out.println(url);
             if (url.startsWith("http")) {
                 imagen = ImageIO.read(new URL(url));
-            }else{
+            } else {
                 imagen = new ImageIcon(url).getImage();
             }
 
@@ -231,7 +230,6 @@ public class Panel extends JPanel {
 
             ImageIcon imgIcon = new ImageIcon(imagen.getScaledInstance(panelwidth, panelheight, Image.SCALE_SMOOTH));
             imagenLabel.setIcon(imgIcon);
-            
 
             imagenLabel.setHorizontalAlignment(SwingConstants.CENTER); // Centrar horizontalmente
             imagenLabel.setVerticalAlignment(SwingConstants.CENTER);
@@ -240,60 +238,44 @@ public class Panel extends JPanel {
             e.printStackTrace();
         }
     }
-    
-    public void conexionAzure(String conexion, String contenedor, String carpetaDestino){
+
+    public void conexionAzure(String conexion, String contenedor, String carpetaDestino) {
         AzureBlobService azureBlobService = new AzureBlobService(conexion, contenedor);
 
         // Descargar imágenes desde Azure
-        for(String url: azureBlobService.obtenerUrlsImagenes(carpetaDestino))
-        imgPaths.add(url);
+        for (String url : azureBlobService.obtenerUrlsImagenes(carpetaDestino)) {
+            imgPaths.add(url);
+        }
 
         if (imgPaths.isEmpty()) {
             System.out.println("No hay imágenes disponibles.");
             System.exit(1);
         }
-    
+
     }
 
 // AÑADIR EL MÉTODO PARA AJUSTAR EL TAMAÑO DE LOS COMPONENTES DENTRO DEL PANEL AQUÍ
-public void adjustComponentsSize(int frameWidth, int frameHeight) {
-    // Ajustar el tamaño del Panel
-    setSize(frameWidth, frameHeight);
+    public void adjustComponentsSize(int frameWidth, int frameHeight) {
+        // Ajustar el tamaño del Panel
+        setSize(frameWidth, frameHeight);
 
-    // Ajustar el tamaño del JLabel que muestra la imagen manteniendo la relación de aspecto
-    if (imagenLabel.getIcon() != null) {
-        double aspectRatio = (double) imagenLabel.getIcon().getIconWidth() / imagenLabel.getIcon().getIconHeight();
-        int newWidth = frameWidth;
-        int newHeight = (int) (newWidth / aspectRatio);
-
-        if (newHeight > frameHeight) {
-            newHeight = frameHeight;
-            newWidth = (int) (newHeight * aspectRatio);
-        }
-
-        imagenLabel.setBounds((frameWidth - newWidth) / 2, (frameHeight - newHeight) / 2, newWidth, newHeight);
-    } else {
         imagenLabel.setBounds(0, 0, getWidth(), getHeight());
-    }
+        
 
-    // Ajustar el tamaño y la posición de los botones
-    for (Component comp : getComponents()) {
-        if (comp instanceof DegradadoButton) {
-            DegradadoButton button = (DegradadoButton) comp;
-            if (button.getText().equals(">")) {
-                button.setBounds(this.getWidth() - 50, 0, 50, this.getHeight());
-            } else if (button.getText().equals("<")) {
-                button.setBounds(0, 0, 50, this.getHeight());
+        // Ajustar el tamaño y la posición de los botones
+        for (Component comp : getComponents()) {
+            if (comp instanceof DegradadoButton button) {
+                if (button.getText().equals(">")) {
+                    button.setBounds(this.getWidth() - 50, 0, 50, this.getHeight());
+                } else if (button.getText().equals("<")) {
+                    button.setBounds(0, 0, 50, this.getHeight());
+                }
             }
         }
-    }
 
-    // Volver a mostrar la imagen actual con el nuevo tamaño
-    if (!imgPaths.isEmpty()) {
-        showImage(imgPaths.get(index));
+        // Volver a mostrar la imagen actual con el nuevo tamaño
+        if (!imgPaths.isEmpty()) {
+            showImage(imgPaths.get(index));
+        }
     }
 }
-}
-
-
-
