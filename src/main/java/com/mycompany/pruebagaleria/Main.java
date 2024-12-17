@@ -6,6 +6,7 @@ package com.mycompany.pruebagaleria;
 
 import static com.mycompany.pruebagaleria.PruebaGaleria.imagenValida;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.Timer;
 
 /**
  *
@@ -42,12 +44,24 @@ public class Main {
 
         pa.setVisible(true);
         frame.add(pa);
+        
+        // Temporizador para evitar ejecución continua
+        Timer resizeTimer = new Timer(200, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Ejecutar código al final del redimensionamiento
+                pa.adjustComponentsSize(frame.getWidth(), frame.getHeight());
+                System.out.println("Redimensionamiento finalizado.");
+            }
+        });
+        resizeTimer.setRepeats(false);
 
         // Añadir un ComponentListener para ajustar el tamaño del Panel y sus componentes
         frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                pa.adjustComponentsSize(frame.getWidth(), frame.getHeight());
+                // Reiniciar el temporizador cada vez que se redimensiona
+                resizeTimer.restart();
             }
         });
 

@@ -254,7 +254,7 @@ public class Panel extends JPanel {
 
     }
 
-// AÑADIR EL MÉTODO PARA AJUSTAR EL TAMAÑO DE LOS COMPONENTES DENTRO DEL PANEL AQUÍ
+    // AÑADIR EL MÉTODO PARA AJUSTAR EL TAMAÑO DE LOS COMPONENTES DENTRO DEL PANEL AQUÍ
     public void adjustComponentsSize(int frameWidth, int frameHeight) {
         // Ajustar el tamaño del Panel
         setSize(frameWidth, frameHeight);
