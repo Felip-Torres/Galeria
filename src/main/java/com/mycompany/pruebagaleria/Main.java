@@ -7,6 +7,8 @@ package com.mycompany.pruebagaleria;
 import static com.mycompany.pruebagaleria.PruebaGaleria.imagenValida;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -31,13 +33,19 @@ public class Main{
         frame.setSize(450, 450);
         
         Panel pa = new Panel();
-        pa.addImageDirectory("C:\\Users\\Alumne\\Documents\\Trasteo");
-        pa.addImage("C:\\Users\\Alumne\\Pictures\\Screenshots\\Captura de pantalla 2024-11-21 115855.png");
 
         pa.setVisible(true);
         frame.add(pa);
+
+                // Añadir un ComponentListener para ajustar el tamaño del Panel y sus componentes
+                frame.addComponentListener(new ComponentAdapter() {
+                    @Override
+                    public void componentResized(ComponentEvent e) {
+                        pa.adjustComponentsSize(frame.getWidth(), frame.getHeight());
+                    }
+                });
         
-        // Hacer visible la ventana
-        frame.setVisible(true);
+                // Hacer visible la ventana
+                frame.setVisible(true);
     }
 }

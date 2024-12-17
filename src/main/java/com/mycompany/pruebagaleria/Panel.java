@@ -8,6 +8,7 @@
 package com.mycompany.pruebagaleria;
 
 import static com.mycompany.pruebagaleria.Main.Transparente;
+import java.awt.Component;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
@@ -252,6 +253,7 @@ public class Panel extends JPanel {
 
             ImageIcon imgIcon = new ImageIcon(imagen.getScaledInstance(panelwidth, panelheight, Image.SCALE_SMOOTH));
             imagenLabel.setIcon(imgIcon);
+            
 
             imagenLabel.setHorizontalAlignment(SwingConstants.CENTER); // Centrar horizontalmente
             imagenLabel.setVerticalAlignment(SwingConstants.CENTER);
@@ -276,7 +278,47 @@ public class Panel extends JPanel {
             System.out.println("No hay imágenes disponibles.");
             System.exit(1);
         }
+    
     }
+
+// AÑADIR EL MÉTODO PARA AJUSTAR EL TAMAÑO DE LOS COMPONENTES DENTRO DEL PANEL AQUÍ
+public void adjustComponentsSize(int frameWidth, int frameHeight) {
+    // Ajustar el tamaño del Panel
+    setSize(frameWidth, frameHeight);
+
+    // Ajustar el tamaño del JLabel que muestra la imagen manteniendo la relación de aspecto
+    if (imagenLabel.getIcon() != null) {
+        double aspectRatio = (double) imagenLabel.getIcon().getIconWidth() / imagenLabel.getIcon().getIconHeight();
+        int newWidth = frameWidth;
+        int newHeight = (int) (newWidth / aspectRatio);
+
+        if (newHeight > frameHeight) {
+            newHeight = frameHeight;
+            newWidth = (int) (newHeight * aspectRatio);
+        }
+
+        imagenLabel.setBounds((frameWidth - newWidth) / 2, (frameHeight - newHeight) / 2, newWidth, newHeight);
+    } else {
+        imagenLabel.setBounds(0, 0, getWidth(), getHeight());
+    }
+
+    // Ajustar el tamaño y la posición de los botones
+    for (Component comp : getComponents()) {
+        if (comp instanceof DegradadoButton) {
+            DegradadoButton button = (DegradadoButton) comp;
+            if (button.getText().equals(">")) {
+                button.setBounds(this.getWidth() - 50, 0, 50, this.getHeight());
+            } else if (button.getText().equals("<")) {
+                button.setBounds(0, 0, 50, this.getHeight());
+            }
+        }
+    }
+
+    // Volver a mostrar la imagen actual con el nuevo tamaño
+    if (!imgPaths.isEmpty()) {
+        showImage(imgPaths.get(index));
+    }
+}
 }
 
 
