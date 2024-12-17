@@ -7,6 +7,8 @@ package com.mycompany.pruebagaleria;
 import static com.mycompany.pruebagaleria.PruebaGaleria.imagenValida;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -33,15 +35,23 @@ public class Main{
         Panel pa = new Panel();
         pa.addImageDirectory("C:\\Users\\Alumne\\Pictures\\Screenshots");
         pa.conexionAzure(
-                "DefaultEndpointsProtocol=https;AccountName=felip;AccountKey=7kWGzzXhJ/KvyMF+J9P83bfc9Uyy3CY9twJ15tmuU3H/fccHALUvrP0fdvhgG79qp7Me7vX8EEke+AStP3kgeQ==;EndpointSuffix=core.windows.net", 
-                "fotos", 
+                "DefaultEndpointsProtocol=https;AccountName=felip;AccountKey=7kWGzzXhJ/KvyMF+J9P83bfc9Uyy3CY9twJ15tmuU3H/fccHALUvrP0fdvhgG79qp7Me7vX8EEke+AStP3kgeQ==;EndpointSuffix=core.windows.net",
+                "fotos",
                 "fondos"
         );
-        
+
 
         pa.setVisible(true);
         frame.add(pa);
-        
+
+                // Añadir un ComponentListener para ajustar el tamaño del Panel y sus componentes
+                frame.addComponentListener(new ComponentAdapter() {
+                    @Override
+                    public void componentResized(ComponentEvent e) {
+                        pa.adjustComponentsSize(frame.getWidth(), frame.getHeight());
+                    }
+                });
+
         // Hacer visible la ventana
         frame.setVisible(true);
     }
