@@ -33,7 +33,7 @@ public class AzureBlobService {
 
         for (BlobItem blobItem : containerClient.listBlobs()) {
             // Filtrar solo los blobs que están dentro de la carpeta remota y validar imágenes
-            if (blobItem.getName().startsWith(carpetaRemota + "/") && Panel.imagenValida(blobItem.getName())) {
+            if (blobItem.getName().startsWith(carpetaRemota + "/") && Galeria.imagenValida(blobItem.getName())) {
                 BlobClient blobClient = containerClient.getBlobClient(blobItem.getName());
                 // Obtener la URL del blob
                 String url = blobClient.getBlobUrl();
