@@ -7,11 +7,10 @@
 
 package com.mycompany.pruebagaleria;
 
-<<<<<<< Updated upstream:src/main/java/com/mycompany/pruebagaleria/Panel.java
-import static com.mycompany.pruebagaleria.Main.Transparente;
-=======
+
+
 import java.awt.Component;
->>>>>>> Stashed changes:src/main/java/com/mycompany/pruebagaleria/Galeria.java
+
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
@@ -254,9 +253,6 @@ public class Galeria extends JPanel {
             System.out.println("No hay imágenes disponibles.");
             System.exit(1);
         }
-<<<<<<< Updated upstream:src/main/java/com/mycompany/pruebagaleria/Panel.java
-=======
-
     }
 
     // AÑADIR EL MÉTODO PARA AJUSTAR EL TAMAÑO DE LOS COMPONENTES DENTRO DEL PANEL AQUÍ
@@ -282,7 +278,6 @@ public class Galeria extends JPanel {
         if (!imgPaths.isEmpty()) {
             showImage(imgPaths.get(index));
         }
->>>>>>> Stashed changes:src/main/java/com/mycompany/pruebagaleria/Galeria.java
     }
 }
 
