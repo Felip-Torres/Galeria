@@ -7,7 +7,11 @@
 
 package com.mycompany.pruebagaleria;
 
+<<<<<<< Updated upstream:src/main/java/com/mycompany/pruebagaleria/Panel.java
 import static com.mycompany.pruebagaleria.Main.Transparente;
+=======
+import java.awt.Component;
+>>>>>>> Stashed changes:src/main/java/com/mycompany/pruebagaleria/Galeria.java
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
@@ -27,7 +31,7 @@ import javax.swing.border.LineBorder;
  *
  * @author Alumne
  */
-public class Panel extends JPanel {
+public class Galeria extends JPanel {
 
     private Color transp = new Color(0, 0, 0, 0);
     private Color opaco = new Color(255, 255, 255, 255);
@@ -35,7 +39,7 @@ public class Panel extends JPanel {
     private int index = 0;
     private final JLabel imagenLabel;
 
-    public Panel() {
+    public Galeria() {
         setSize(400, 400);
         setLayout(null);
         setBorder(new LineBorder(Color.BLACK));
@@ -56,9 +60,9 @@ public class Panel extends JPanel {
         DegradadoButton botonIzquierda = new DegradadoButton("<", opaco, transp);
 
         botonIzquierda.setBounds(0, 0, 50, this.getHeight());  // Posición y tamaño
-        botonIzquierda.setBackground(Transparente);  // Fondo transparente
+        botonIzquierda.setBackground(transp);  // Fondo transparente
         botonIzquierda.setBorderPainted(false);  // Elimina el borde
-        botonIzquierda.setForeground(Transparente);
+        botonIzquierda.setForeground(transp);
         botonIzquierda.setOpaque(false);
         botonIzquierda.addMouseListener(new MouseListener() {
             @Override
@@ -250,6 +254,35 @@ public class Panel extends JPanel {
             System.out.println("No hay imágenes disponibles.");
             System.exit(1);
         }
+<<<<<<< Updated upstream:src/main/java/com/mycompany/pruebagaleria/Panel.java
+=======
+
+    }
+
+    // AÑADIR EL MÉTODO PARA AJUSTAR EL TAMAÑO DE LOS COMPONENTES DENTRO DEL PANEL AQUÍ
+    public void adjustComponentsSize(int frameWidth, int frameHeight) {
+        // Ajustar el tamaño del Galeria
+        setSize(frameWidth, frameHeight);
+
+        imagenLabel.setBounds(0, 0, getWidth(), getHeight());
+        
+
+        // Ajustar el tamaño y la posición de los botones
+        for (Component comp : getComponents()) {
+            if (comp instanceof DegradadoButton button) {
+                if (button.getText().equals(">")) {
+                    button.setBounds(this.getWidth() - 50, 0, 50, this.getHeight());
+                } else if (button.getText().equals("<")) {
+                    button.setBounds(0, 0, 50, this.getHeight());
+                }
+            }
+        }
+
+        // Volver a mostrar la imagen actual con el nuevo tamaño
+        if (!imgPaths.isEmpty()) {
+            showImage(imgPaths.get(index));
+        }
+>>>>>>> Stashed changes:src/main/java/com/mycompany/pruebagaleria/Galeria.java
     }
 }
 
